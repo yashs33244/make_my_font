@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState, useRef } from "react"
+import { useState, useRef } from "react";
 import {
   Bold,
   Italic,
@@ -27,19 +27,32 @@ import {
   PaintBucket,
   Minus,
   Plus,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Slider } from "@/components/ui/slider"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+// import { pdf } from "@react-pdf/renderer";
+// import { saveAs } from "file-saver";
+// import { extractTextFromPdf } from "@/lib/pdf-extract"; // Assume this is a utility function to extract text from PDF
 
 interface TextEditorProps {
-  fontUrl: string | null
+  fontUrl: string | null;
 }
 
 export function TextEditor({ fontUrl }: TextEditorProps) {
@@ -53,67 +66,80 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
       <li>Adjust alignment</li>
     </ul>
     <p>When you're happy with your text, you can download it as a PDF or image.</p>
-  `)
-  const [fontSize, setFontSize] = useState(16)
-  const [lineHeight, setLineHeight] = useState(1.5)
-  const [textColor, setTextColor] = useState("#073742")
-  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF")
-  const [format, setFormat] = useState<string[]>([])
-  const [alignment, setAlignment] = useState<string>("left")
-  const [documentName, setDocumentName] = useState("Untitled Document")
-  const [isEditing, setIsEditing] = useState(false)
+  `);
+  const [fontSize, setFontSize] = useState(16);
+  const [lineHeight, setLineHeight] = useState(1.5);
+  const [textColor, setTextColor] = useState("#073742");
+  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
+  const [format, setFormat] = useState<string[]>([]);
+  const [alignment, setAlignment] = useState<string>("left");
+  const [documentName, setDocumentName] = useState("Untitled Document");
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedFont, setSelectedFont] = useState(
+    fontUrl ? "CustomFont" : "Arial"
+  );
+  const [pageBackgroundColor, setPageBackgroundColor] = useState("#FFFFFF");
 
-  const editorRef = useRef<HTMLDivElement>(null)
+  const editorRef = useRef<HTMLDivElement>(null);
 
-  // In a real app, we would load the font using @font-face and integrate a proper rich text editor
-  // like TipTap, CKEditor, or Quill
+  const fonts = [
+    { label: "Custom Font", value: "CustomFont" },
+    { label: "Arial", value: "Arial" },
+    { label: "Times New Roman", value: "Times New Roman" },
+    { label: "Courier New", value: "Courier New" },
+    { label: "Verdana", value: "Verdana" },
+  ];
 
-  const fontStyle = fontUrl
-    ? {
-        fontFamily: "'CustomFont', sans-serif",
-        fontSize: `${fontSize}px`,
-        lineHeight: lineHeight,
-        color: textColor,
-        backgroundColor: backgroundColor,
-      }
-    : {
-        fontSize: `${fontSize}px`,
-        lineHeight: lineHeight,
-        color: textColor,
-        backgroundColor: backgroundColor,
-      }
+  const fontStyle = {
+    fontFamily: selectedFont,
+    fontSize: `${fontSize}px`,
+    lineHeight: lineHeight,
+    color: textColor,
+    backgroundColor: pageBackgroundColor,
+  };
 
   const handleFormatChange = (value: string[]) => {
-    setFormat(value)
-
-    // In a real implementation, this would apply formatting to the selected text
-    // For now, we're just tracking the state
-  }
+    setFormat(value);
+  };
 
   const handleAlignmentChange = (value: string) => {
-    if (value) setAlignment(value)
-
+    if (value) setAlignment(value);
     if (editorRef.current) {
-      editorRef.current.style.textAlign = value
+      editorRef.current.style.textAlign = value;
     }
-  }
+  };
 
   const handleFontSizeChange = (value: string) => {
-    setFontSize(Number.parseInt(value))
-  }
+    setFontSize(Number.parseInt(value));
+  };
 
   const increaseFontSize = () => {
-    setFontSize((prev) => Math.min(prev + 1, 72))
-  }
+    setFontSize((prev) => Math.min(prev + 1, 72));
+  };
 
   const decreaseFontSize = () => {
-    setFontSize((prev) => Math.max(prev - 1, 8))
-  }
+    setFontSize((prev) => Math.max(prev - 1, 8));
+  };
 
   const applyHeading = (level: string) => {
-    // In a real implementation, this would apply heading to the selected text
-    console.log(`Applying heading ${level}`)
-  }
+    console.log(`Applying heading ${level}`);
+  };
+
+  const handleExportPdf = async () => {
+    // const { default: MyDocument } = await import("@/components/MyDocument"); // Assume this is a component to render the PDF
+    // const blob = await pdf(<MyDocument content={content} />).toBlob();
+    // saveAs(blob, `${documentName}.pdf`);
+  };
+
+  const handleInsertPdf = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // const text = await extractTextFromPdf(file);
+      // setContent((prev) => prev + text);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -126,7 +152,7 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
             onBlur={() => setIsEditing(false)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                setIsEditing(false)
+                setIsEditing(false);
               }
             }}
             autoFocus
@@ -141,11 +167,19 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
         )}
 
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="border-[#5C818A] text-[#073742]">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-[#5C818A] text-[#073742]"
+          >
             <Save className="h-4 w-4 mr-1" />
             Save
           </Button>
-          <Button variant="outline" size="sm" className="border-[#5C818A] text-[#073742]">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-[#5C818A] text-[#073742]"
+          >
             <Share2 className="h-4 w-4 mr-1" />
             Share
           </Button>
@@ -155,10 +189,20 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
       <div className="flex flex-col space-y-2">
         <div className="flex flex-wrap gap-1 p-1 border rounded-md border-[#5C818A] bg-[#FAFAFA]">
           <div className="flex items-center gap-1 px-1">
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-[#073742]" onClick={() => console.log("Undo")}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-[#073742]"
+              onClick={() => console.log("Undo")}
+            >
               <Undo className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-[#073742]" onClick={() => console.log("Redo")}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-[#073742]"
+              onClick={() => console.log("Redo")}
+            >
               <Redo className="h-4 w-4" />
             </Button>
           </div>
@@ -175,19 +219,35 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0">
               <div className="flex flex-col">
-                <Button variant="ghost" className="justify-start text-[#073742]" onClick={() => applyHeading("h1")}>
+                <Button
+                  variant="ghost"
+                  className="justify-start text-[#073742]"
+                  onClick={() => applyHeading("h1")}
+                >
                   <Heading1 className="h-4 w-4 mr-2" />
                   Heading 1
                 </Button>
-                <Button variant="ghost" className="justify-start text-[#073742]" onClick={() => applyHeading("h2")}>
+                <Button
+                  variant="ghost"
+                  className="justify-start text-[#073742]"
+                  onClick={() => applyHeading("h2")}
+                >
                   <Heading2 className="h-4 w-4 mr-2" />
                   Heading 2
                 </Button>
-                <Button variant="ghost" className="justify-start text-[#073742]" onClick={() => applyHeading("h3")}>
+                <Button
+                  variant="ghost"
+                  className="justify-start text-[#073742]"
+                  onClick={() => applyHeading("h3")}
+                >
                   <Heading3 className="h-4 w-4 mr-2" />
                   Heading 3
                 </Button>
-                <Button variant="ghost" className="justify-start text-[#073742]" onClick={() => applyHeading("p")}>
+                <Button
+                  variant="ghost"
+                  className="justify-start text-[#073742]"
+                  onClick={() => applyHeading("p")}
+                >
                   <Paragraph className="h-4 w-4 mr-2" />
                   Paragraph
                 </Button>
@@ -196,29 +256,64 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
           </Popover>
 
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-[#073742]" onClick={decreaseFontSize}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-[#073742]"
+              onClick={decreaseFontSize}
+            >
               <Minus className="h-4 w-4" />
             </Button>
-            <Select value={fontSize.toString()} onValueChange={handleFontSizeChange}>
+            <Select
+              value={fontSize.toString()}
+              onValueChange={handleFontSizeChange}
+            >
               <SelectTrigger className="w-[70px] h-8 border-[#5C818A]">
                 <SelectValue placeholder="Size" />
               </SelectTrigger>
               <SelectContent>
-                {[8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 30, 36, 48, 60, 72].map((size) => (
-                  <SelectItem key={size} value={size.toString()}>
-                    {size}px
-                  </SelectItem>
-                ))}
+                {[8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 30, 36, 48, 60, 72].map(
+                  (size) => (
+                    <SelectItem key={size} value={size.toString()}>
+                      {size}px
+                    </SelectItem>
+                  )
+                )}
               </SelectContent>
             </Select>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-[#073742]" onClick={increaseFontSize}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-[#073742]"
+              onClick={increaseFontSize}
+            >
               <Plus className="h-4 w-4" />
             </Button>
           </div>
 
           <Separator orientation="vertical" className="h-8 bg-[#5C818A]" />
 
-          <ToggleGroup type="multiple" value={format} onValueChange={handleFormatChange} className="flex-wrap">
+          <Select value={selectedFont} onValueChange={setSelectedFont}>
+            <SelectTrigger className="w-[120px] h-8 border-[#5C818A]">
+              <SelectValue placeholder="Font" />
+            </SelectTrigger>
+            <SelectContent>
+              {fonts.map((font) => (
+                <SelectItem key={font.value} value={font.value}>
+                  {font.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Separator orientation="vertical" className="h-8 bg-[#5C818A]" />
+
+          <ToggleGroup
+            type="multiple"
+            value={format}
+            onValueChange={handleFormatChange}
+            className="flex-wrap"
+          >
             <ToggleGroupItem
               value="bold"
               aria-label="Toggle bold"
@@ -244,7 +339,12 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
 
           <Separator orientation="vertical" className="h-8 bg-[#5C818A]" />
 
-          <ToggleGroup type="single" value={alignment} onValueChange={handleAlignmentChange} className="flex-wrap">
+          <ToggleGroup
+            type="single"
+            value={alignment}
+            onValueChange={handleAlignmentChange}
+            className="flex-wrap"
+          >
             <ToggleGroupItem
               value="left"
               aria-label="Align left"
@@ -292,7 +392,11 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
           <div className="flex items-center gap-1">
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-[#073742]">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-[#073742]"
+                >
                   <PaintBucket className="h-4 w-4" />
                 </Button>
               </PopoverTrigger>
@@ -353,12 +457,13 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
                         "#F4F5F6",
                         "#EBEFF0",
                         "#E0E5E6",
+                        "#000000",
                       ].map((color) => (
                         <div
                           key={color}
                           className="w-8 h-8 rounded-full cursor-pointer border border-[#5C818A]"
                           style={{ backgroundColor: color }}
-                          onClick={() => setBackgroundColor(color)}
+                          onClick={() => setPageBackgroundColor(color)}
                         />
                       ))}
                     </div>
@@ -369,8 +474,8 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
                       <Input
                         id="custom-bg-color"
                         type="color"
-                        value={backgroundColor}
-                        onChange={(e) => setBackgroundColor(e.target.value)}
+                        value={pageBackgroundColor}
+                        onChange={(e) => setPageBackgroundColor(e.target.value)}
                         className="w-8 h-8 p-0 border-[#5C818A]"
                       />
                     </div>
@@ -379,10 +484,18 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
               </PopoverContent>
             </Popover>
 
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-[#073742]">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-[#073742]"
+            >
               <Link2 className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-[#073742]">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-[#073742]"
+            >
               <ImageIcon className="h-4 w-4" />
             </Button>
           </div>
@@ -392,11 +505,25 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="sm" className="h-8 text-[#073742]">
               <FileText className="h-4 w-4 mr-1" />
-              Insert
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={handleInsertPdf}
+                className="hidden"
+                id="insert-pdf"
+              />
+              <label htmlFor="insert-pdf" className="cursor-pointer">
+                Insert PDF
+              </label>
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 text-[#073742]">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 text-[#073742]"
+              onClick={handleExportPdf}
+            >
               <Download className="h-4 w-4 mr-1" />
-              Export
+              Export as PDF
             </Button>
           </div>
         </div>
@@ -415,7 +542,9 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
               onValueChange={(value) => setLineHeight(value[0])}
               className="w-32"
             />
-            <span className="text-xs text-[#5A6C71]">{lineHeight.toFixed(1)}</span>
+            <span className="text-xs text-[#5A6C71]">
+              {lineHeight.toFixed(1)}
+            </span>
           </div>
         </div>
       </div>
@@ -430,7 +559,11 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
       />
 
       <div className="flex justify-end gap-2">
-        <Button variant="outline" className="border-[#5C818A] text-[#073742]">
+        <Button
+          variant="outline"
+          className="border-[#5C818A] text-[#073742]"
+          onClick={handleExportPdf}
+        >
           <FileText className="mr-2 h-4 w-4" />
           Save as PDF
         </Button>
@@ -444,6 +577,5 @@ export function TextEditor({ fontUrl }: TextEditorProps) {
         </Button>
       </div>
     </div>
-  )
+  );
 }
-
